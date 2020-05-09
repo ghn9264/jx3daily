@@ -18,7 +18,13 @@ const jx3userDb = new Schema({
   sect: String//门派
 });
 
-
+const skillDb = new Schema({
+  skillname:String,
+  sect:String,
+  innate:String,
+  ratio:{kz:Number,yd:Number,fy:Number,sh:Number,my:Number},
+})
+const skillModel = mongoose.model('skilldb', skillDb);
 const jx3Model = mongoose.model('jx3userdb', jx3userDb);
 
 class Mongodb {
@@ -49,6 +55,39 @@ class Mongodb {
       })
     })
   }
+    // 查询
+    querybysect(sect) {
+      return new Promise((resolve, reject) => {
+        skillModel.find({sect:sect} ,(err, res) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(res)
+        })
+      })
+    }
+        // 查询
+        querybyinnate(innate) {
+          return new Promise((resolve, reject) => {
+            skillModel.find({innate:innate} ,(err, res) => {
+              if (err) {
+                reject(err)
+              }
+              resolve(res)
+            })
+          })
+        }
+                // 查询
+                querybyskill(skillname) {
+                  return new Promise((resolve, reject) => {
+                    skillModel.findOne({skillname:skillname} ,(err, res) => {
+                      if (err) {
+                        reject(err)
+                      }
+                      resolve(res)
+                    })
+                  })
+                }
   // 查询
   // isExist(qq) {
   //   return new Promise((resolve, reject) => {
@@ -77,6 +116,19 @@ class Mongodb {
       })
     })
   }
+  //
+  importdata(data){
+    const s = new skillModel(data)
+    return new Promise((resolve, reject) => {
+      s.save((err, res) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(res)
+        console.log("导入成功")
+      })
+    })
+  }
   // 注册
   res(obj) {
     const m = new jx3Model(obj)
@@ -90,6 +142,8 @@ class Mongodb {
       })
     })
 
-  }
+
+ }
+
 }
 module.exports = new Mongodb()
