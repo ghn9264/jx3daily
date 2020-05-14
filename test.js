@@ -61,11 +61,13 @@ async function n() {
   let redskills = ["缴械", "流光", "镇山河", "六合独尊", "千蝶", "女娲"];
   let reddata = []; //[{xs:1,asd:3}]
   let redzongfen = { kz: 0, yd: 0, fy: 0, sh: 0, my: 0 };
-  let redresult =0;
+  let redzongfenarr = [];
+  let redresult = 0;
   let blue = ["问水", "傲血", "云裳"];
   let blueskills = ["风来吴山", "虎跑", "守如山", "疾", "王母", "蝶弄足"];
   let bluedata = [];
   let bluezongfen = { kz: 0, yd: 0, fy: 0, sh: 0, my: 0 };
+  let bluezongfenarr = [];
   let blueresult = 0;
   for (let index = 0; index < redskills.length; index++) {
     let x = await ModelDb.querybyskill(redskills[index]);
@@ -78,6 +80,7 @@ async function n() {
     redzongfen.sh += element.sh;
     redzongfen.my += element.my;
   });
+
   for (let index = 0; index < blueskills.length; index++) {
     let x = await ModelDb.querybyskill(blueskills[index]);
     bluedata.push(x.ratio);
@@ -89,30 +92,77 @@ async function n() {
     bluezongfen.sh += element.sh;
     bluezongfen.my += element.my;
   });
-  console.log(redzongfen,bluezongfen);
-  redresult = redzongfen.kz-bluezongfen.my+bluezongfen.yd+redzongfen.yd-bluezongfen.kz+bluezongfen.fy+redzongfen.fy-bluezongfen.yd+bluezongfen.sh+redzongfen.sh-bluezongfen.fy+bluezongfen.my+redzongfen.my-bluezongfen.sh+bluezongfen.kz
-  blueresult = bluezongfen.kz-redzongfen.my+redzongfen.yd+bluezongfen.yd-redzongfen.kz+redzongfen.fy+bluezongfen.fy-redzongfen.yd+redzongfen.sh+bluezongfen.sh-redzongfen.fy+redzongfen.my+bluezongfen.my-redzongfen.sh+redzongfen.kz
-  console.log(redresult,blueresult);
-  console.log(varianceArr([21,-25,55,20,49]));
-  console.log(varianceArr([7,24,38,37,14]));
+  
 
+  redzongfenarr = Object.values(redzongfen)
+  bluezongfenarr = Object.values(bluezongfen);
+  let redzongfenarrtemp = []
+  console.log(redzongfen, bluezongfen);
+  for (let i = 0; i < redzongfenarr.length; i++) {
+    if (i==4) {
+      if (redzongfenarr[i]>bluezongfenarr[0]) {
+        redzongfenarrtemp[i]=redzongfenarr[i]-bluezongfenarr[0]
+      }else{
+        redzongfenarrtemp[i]=0
+      }
+      break
+    }
+    if (redzongfenarr[i]>bluezongfenarr[i+1]) {
+      redzongfenarrtemp[i]=redzongfenarr[i]-bluezongfenarr[i+1]
+    }else{
+      redzongfenarrtemp[i]=0
+    }
+  }
+  for (let i = 0; i < bluezongfenarr.length; i++) {
+    if (i==4) {
+      if (bluezongfenarr[i]>redzongfenarr[0]) {
+        bluezongfenarr[i]=bluezongfenarr[i]-redzongfenarr[0]
+      }else{
+        bluezongfenarr[i]=0
+      }
+      break
+    }
+    if (bluezongfenarr[i]>redzongfenarr[i+1]) {
+      bluezongfenarr[i]=bluezongfenarr[i]-redzongfenarr[i+1]
+    }else{
+      bluezongfenarr[i]=0
+    }
+  }
+  // redzongfen.yd= redzongfen.yd*0.8
+  // bluezongfen.yd=bluezongfen.yd*0.8
+  // redzongfen.sh =redzongfen.sh*1.1
+  // bluezongfen.sh =bluezongfen.sh*1.1
+  redresult =sum(redzongfenarrtemp)
+  blueresult =sum(bluezongfenarr)
+  console.log(redresult, blueresult);
+  if (redsult>bluesult) {
+    
+  }else{
+    
+  }
 }
 
 n();
 
 function varianceArr(arr) {
-    let s,
-        ave,
-        sum = 0,
-        sums=0,
-        len = arr.length;
-    for (let i = 0; i < len; i++) {
-        sum += Number(arr[i]);
-    }
-    ave = sum / len;
-    for(let i = 0; i < len; i++){
-        sums+=(Number(arr[i])- ave)*(Number(arr[i])- ave)
-    }
-    s=(sums/len).toFixed(4);
-    return s;
-};
+  let s,
+    ave,
+    sum = 0,
+    sums = 0,
+    len = arr.length;
+  for (let i = 0; i < len; i++) {
+    sum += Number(arr[i]);
+  }
+  ave = sum / len;
+  for (let i = 0; i < len; i++) {
+    sums += (Number(arr[i]) - ave) * (Number(arr[i]) - ave);
+  }
+  s = (sums / len).toFixed(4);
+  return s;
+}
+function sum(arr) {
+  return arr.reduce(function(prev, curr, idx, arr){
+    return prev + curr;
+  });
+}
+

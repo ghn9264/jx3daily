@@ -6,6 +6,8 @@
 //4、根据胜方三位的本职业属性，组合结束语：个人门派特色，配合个人门派特色，击杀了慌了神的随机对方，本方胜利。
 //5、发消息
 const CQHttp = require('cqhttp');
+const utils = require('./util')
+const fs = require('fs')
 const bot = new CQHttp({
     apiRoot: 'http://127.0.0.1:5700/',
 });
@@ -18,50 +20,42 @@ module.exports= async function (qqsred, qqsblue) {
     let blue = 0;
     let redfen = 0;
     let bluefen = 0;
+    let redzh=[]
+    let bluezh=[]
+    let redskills=[]
+    let blueskills=[]
+    fs.writeFileSync('whitelist.json',[qqsred,qqsblue])
     for (let i = 0; i < qqsred.length; i++) {
         let userdata = await ModelDb.findByqq(qqsred[i])
         reddata.push(userdata)
-        if (IsInArray(arr, userdata.sect)) {
+        redzh.push(userdata.sect)
+        if (utils.IsInArray(arr, userdata.sect)) {
             if (red > 0) {
                 red = red - 20
             }
             red = red + 10
         }
-        redfen = redfen + userdata.jjcrate + userdata.specialjjcrate
+        let skills = await ModelDb.querybysect(userdata.sect)
+        await bot('send_private_msg', { user_id: qqsred[i], message: '请选择使用的技能'+skills[0]+' '+skills[1]+' '+skills[2]+',用空格分隔'})
+        redfen = redfen + userdata.specialjjcrate
     }
     for (let i = 0; i < qqsblue.length; i++) {
         let userdata = await ModelDb.findByqq(qqsblue[i])
         bluedata.push(userdata)
-        if (IsInArray(arr, userdata.sect)) {
+        bluezh.push(userdata.sect)
+        if (utils.IsInArray(arr, userdata.sect)) {
             if (blue > 0) {
                 blue = blue - 20
             }
             blue = blue + 10
         }
-        bluefen = bluefen + userdata.jjcrate + userdata.specialjjcrate
+        let skills = await ModelDb.querybysect(userdata.sect)
+        await bot('send_private_msg', { user_id: qqsred[i], message: '请选择使用的技能'+skills[0]+' '+skills[1]+' '+skills[2]+',用空格分隔'})
+        bluefen = bluefen  + userdata.specialjjcrate
     }
-    let redwin = "蓝方屡败屡战，江湖知上终究会有你们的传说。"
-    let bluewin = "红方诸位武学有待磨练。"
-    if (red + redfen > blue + bluefen) {
-        if (red + redfen > randomNum(1, 300)) {
-            await bot('send_group_msg', { group_id: data.group_id, message: redwin })
-        }
+    //
 
-    } else {
-        if (blue + bluefen > randomNum(1, 300)) {
-            await bot('send_group_msg', { group_id: data.group_id, message: bluewin })
-        }
-    }
-}
-
-function IsInArray(arr, val) {
-
-    var testStr = ',' + arr.join(",") + ",";
-
-    return testStr.indexOf("," + val + ",") != -1;
 
 }
-function randomNum(m, n) {
-    var num = Math.floor(Math.random() * (m - n) + n);
-    return num
-}
+
+

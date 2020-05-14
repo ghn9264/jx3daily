@@ -36,7 +36,22 @@ function randomString(len = 32) {
   }
   return pwd;
 }
+//是否在数组
+function IsInArray(arr, val) {
+
+  var testStr = ',' + arr.join(",") + ",";
+
+  return testStr.indexOf("," + val + ",") != -1;
+
+}
+//设置（n,n）随机数
+function randomNum(m, n) {
+  var num = Math.floor(Math.random() * (m - n) + n);
+  return num
+}
 module.exports = {
   getReqSign,
   randomString,
+  IsInArray,
+  randomNum
 }
