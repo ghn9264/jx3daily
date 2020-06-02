@@ -5,6 +5,7 @@ var bodyParser = require('koa-bodyparser');
 const CQHttp = require('cqhttp');
 const ModelDb = require('./db')
 const getcj = require('./getcj')
+const choosefn =require('./choosefn') ;
 const app = new Koa();
 const bot = new CQHttp({
     apiRoot: 'http://127.0.0.1:5700/',
@@ -23,6 +24,7 @@ app.use(async (ctx, next) => {
     // console.log(ctx.res)
     //  console.log(ctx.socket)
     if (data.raw_message) {
+        choosefn(data)
         // let mgdata = {
         //     "title":data.group_id,
         //     'body': JSON.stringify(data),
@@ -69,7 +71,7 @@ app.use(async (ctx, next) => {
             }
         }
     }
-    
+
     
 });
 

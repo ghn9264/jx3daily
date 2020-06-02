@@ -1,6 +1,7 @@
 const CQHttp = require('cqhttp');
 const axios = require('axios')
 const getcj = require('./getcj')
+const cs  = require('./choosefn')
 
 const bot = new CQHttp({
     apiRoot: 'http://127.0.0.1:5700/',
@@ -17,7 +18,7 @@ bot.on('message', async context => {
             message: resmsg
         });
     }
-    
+    cs(context)    
 });
 
 bot.listen(8080, '127.0.0.1');
