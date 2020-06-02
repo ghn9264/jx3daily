@@ -1,5 +1,7 @@
 // const axios = require('axios')
 // const CQHttp = require('cqhttp');
+const fs = require("fs");
+const ModelDb = require("./db");
 // let data = [{
 //     "type": "text",
 //     "data": { "text": "这是\n第一段" }
@@ -43,6 +45,7 @@
 // let str = "本职业|明教"
 // if (str.includes("本职业|")) {
 //     console.log("123");
+<<<<<<< HEAD
     
 // }else{
 //     console.log(str.includes("本职业|"));
@@ -76,6 +79,127 @@ async function a() {
         console.log($('.tb').find('td')[5].children[0].data);
         console.log($('.tb').find('td')[6].children[0].data);
         console.log($('.tb').find('td')[9].children[0].data);
+=======
+
+// }else{
+//     console.log(str.includes("本职业|"));
+
+// }
+async function n() {
+  // let data = fs.readFileSync('skill.json','utf8')
+  // data = JSON.parse(data)
+  // data.forEach(element => {
+  //     ModelDb.importdata(element)
+  // });
+  //    let a = await ModelDb.querybysect("明教")
+  let red = ["焚影", "紫霞", "补天"];
+  let redskills = ["缴械", "流光", "镇山河", "六合独尊", "千蝶", "女娲"];
+  let reddata = []; //[{xs:1,asd:3}]
+  let redzongfen = { kz: 0, yd: 0, fy: 0, sh: 0, my: 0 };
+  let redzongfenarr = [];
+  let redresult = 0;
+  let blue = ["问水", "傲血", "云裳"];
+  let blueskills = ["风来吴山", "虎跑", "守如山", "疾", "王母", "蝶弄足"];
+  let bluedata = [];
+  let bluezongfen = { kz: 0, yd: 0, fy: 0, sh: 0, my: 0 };
+  let bluezongfenarr = [];
+  let blueresult = 0;
+  for (let index = 0; index < redskills.length; index++) {
+    let x = await ModelDb.querybyskill(redskills[index]);
+    reddata.push(x.ratio);
+  }
+  reddata.forEach((element) => {
+    redzongfen.kz += element.kz;
+    redzongfen.yd += element.yd;
+    redzongfen.fy += element.fy;
+    redzongfen.sh += element.sh;
+    redzongfen.my += element.my;
+  });
+
+  for (let index = 0; index < blueskills.length; index++) {
+    let x = await ModelDb.querybyskill(blueskills[index]);
+    bluedata.push(x.ratio);
+  }
+  bluedata.forEach((element) => {
+    bluezongfen.kz += element.kz;
+    bluezongfen.yd += element.yd;
+    bluezongfen.fy += element.fy;
+    bluezongfen.sh += element.sh;
+    bluezongfen.my += element.my;
+  });
+  
+
+  redzongfenarr = Object.values(redzongfen)
+  bluezongfenarr = Object.values(bluezongfen);
+  let redzongfenarrtemp = []
+  console.log(redzongfen, bluezongfen);
+  for (let i = 0; i < redzongfenarr.length; i++) {
+    if (i==4) {
+      if (redzongfenarr[i]>bluezongfenarr[0]) {
+        redzongfenarrtemp[i]=redzongfenarr[i]-bluezongfenarr[0]
+      }else{
+        redzongfenarrtemp[i]=0
+      }
+      break
+    }
+    if (redzongfenarr[i]>bluezongfenarr[i+1]) {
+      redzongfenarrtemp[i]=redzongfenarr[i]-bluezongfenarr[i+1]
+    }else{
+      redzongfenarrtemp[i]=0
+    }
+  }
+  for (let i = 0; i < bluezongfenarr.length; i++) {
+    if (i==4) {
+      if (bluezongfenarr[i]>redzongfenarr[0]) {
+        bluezongfenarr[i]=bluezongfenarr[i]-redzongfenarr[0]
+      }else{
+        bluezongfenarr[i]=0
+      }
+      break
+    }
+    if (bluezongfenarr[i]>redzongfenarr[i+1]) {
+      bluezongfenarr[i]=bluezongfenarr[i]-redzongfenarr[i+1]
+    }else{
+      bluezongfenarr[i]=0
+    }
+  }
+  // redzongfen.yd= redzongfen.yd*0.8
+  // bluezongfen.yd=bluezongfen.yd*0.8
+  // redzongfen.sh =redzongfen.sh*1.1
+  // bluezongfen.sh =bluezongfen.sh*1.1
+  redresult =sum(redzongfenarrtemp)
+  blueresult =sum(bluezongfenarr)
+  console.log(redresult, blueresult);
+  if (redsult>bluesult) {
+    
+  }else{
+    
+  }
+}
+
+n();
+
+function varianceArr(arr) {
+  let s,
+    ave,
+    sum = 0,
+    sums = 0,
+    len = arr.length;
+  for (let i = 0; i < len; i++) {
+    sum += Number(arr[i]);
+  }
+  ave = sum / len;
+  for (let i = 0; i < len; i++) {
+    sums += (Number(arr[i]) - ave) * (Number(arr[i]) - ave);
+  }
+  s = (sums / len).toFixed(4);
+  return s;
+}
+function sum(arr) {
+  return arr.reduce(function(prev, curr, idx, arr){
+    return prev + curr;
+  });
+>>>>>>> 12005358c25d3b86b39bd59348d28a8b78d3f362
 }
 a()
 
